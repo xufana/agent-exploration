@@ -4,11 +4,17 @@ from collections.abc import Callable
 from dataclasses import replace
 from typing import Any
 
+import pytest
 from tau2.data_model.message import AssistantMessage, ToolCall, ToolMessage
 
+import stand
 from stand.config import get_config
 from stand.ground_truth import declared
 from stand.target import BlackBoxAgent
+
+pytestmark = pytest.mark.skipif(
+    stand.TAU2_DATA_DIR is None, reason="tau2 data missing: git submodule update --init"
+)
 
 
 class ScriptedAgent:

@@ -28,7 +28,10 @@ dev = [
 ]
 
 [tool.uv.sources]
-tau2 = { path = "third_party/tau2-bench", editable = true }
+# Code: τ-bench v1.0.1 by commit, so a clone without submodules still installs.
+# Data (domain DBs, policies, tasks) is not in the package; it comes from the
+# third_party/tau2-bench submodule, pinned to the same commit (see tests/test_package.py).
+tau2 = { git = "https://github.com/sierra-research/tau2-bench", rev = "fc0055dc4e0a316c3f83133267fbd6faaa770992" }
 
 [build-system]
 requires = ["hatchling"]

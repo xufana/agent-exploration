@@ -86,7 +86,7 @@ Deadlines for checkpoints 2–7 are tentative and will be confirmed by the progr
 ## Running the testbed
 
 ```bash
-git submodule update --init      # τ-bench (tau2-bench v1.0.1) in third_party/
+git submodule update --init      # τ-bench domain data; uv installs its code from the same commit
 uv sync
 cp .env.example .env             # API key + AGENT_LLM (any LiteLLM model name)
 
@@ -104,7 +104,7 @@ uv run pytest                            # checks that need no LLM
 ├── src/
 │   └── stand/           # testbed: τ-bench agent as a black box, configurations, declared set
 ├── data/ground_truth/   # exported declared sets
-├── third_party/         # tau2-bench (git submodule)
+├── third_party/         # tau2-bench v1.0.1 (git submodule, source of domain data)
 ├── tests/
 └── experiments/         # notebooks and results
 ```
