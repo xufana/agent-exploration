@@ -1,12 +1,12 @@
 """Construct τ-bench objects (environment, toolset, agent) from a StandConfig."""
 
 import os
-from typing import Callable
+from collections.abc import Callable
 
 import litellm
-
 from tau2.agent.base_agent import HalfDuplexAgent
 from tau2.agent.llm_agent import LLMAgent
+from tau2.data_model.tasks import Task
 from tau2.environment.environment import Environment
 from tau2.environment.tool import Tool
 from tau2.registry import registry
@@ -32,7 +32,7 @@ def build_environment(config: StandConfig) -> Environment:
 
 def agent_tools(env: Environment, config: StandConfig) -> list[Tool]:
     """The tools the agent is given (the declared set), after config filters."""
-    tools = env.get_tools()
+    tools: list[Tool] = env.get_tools()
     if config.tools_include is not None:
         unknown = set(config.tools_include) - {t.name for t in tools}
         if unknown:
@@ -67,7 +67,7 @@ def llm_agent_factory(tools: list[Tool], policy: str, config: StandConfig) -> Ha
     )
 
 
-def _get_task(domain: str, task_id: str):
+def _get_task(domain: str, task_id: str) -> Task:
     tasks = registry.get_tasks_loader(domain)(None)
     for task in tasks:
         if task.id == task_id:

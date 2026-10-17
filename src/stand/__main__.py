@@ -1,15 +1,14 @@
 """Testbed CLI.
 
-    python -m stand configs                  # list configurations
-    python -m stand declared retail          # dump the declared set to data/ground_truth/
-    python -m stand chat retail              # talk to the agent as the user
+python -m stand configs                  # list configurations
+python -m stand declared retail          # dump the declared set to data/ground_truth/
+python -m stand chat retail              # talk to the agent as the user
 """
 
 import json
 from dataclasses import replace
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 import typer
 
@@ -25,14 +24,14 @@ app = typer.Typer(add_completion=False, no_args_is_help=True)
 
 
 @app.command()
-def configs():
+def configs() -> None:
     """List testbed configurations."""
     for c in CONFIGS.values():
         print(f"{c.name:20} domain={c.domain:10} llm={c.agent_llm}")
 
 
 @app.command()
-def declared(config: str, out_dir: Path = GROUND_TRUTH_DIR):
+def declared(config: str, out_dir: Path = GROUND_TRUTH_DIR) -> None:
     """Write the declared set (prompt, tools, schemas, DB ids) of a configuration."""
     data = get_declared(get_config(config))
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -44,10 +43,10 @@ def declared(config: str, out_dir: Path = GROUND_TRUTH_DIR):
 @app.command()
 def chat(
     config: str,
-    llm: Optional[str] = None,
-    api_base: Optional[str] = None,
+    llm: str | None = None,
+    api_base: str | None = None,
     show_tools: bool = False,
-):
+) -> None:
     """Interactive chat as the user. Commands: /trace, /reset, /quit."""
     cfg = get_config(config)
     if llm:
