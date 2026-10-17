@@ -83,13 +83,28 @@ Deadlines for checkpoints 2–7 are tentative and will be confirmed by the progr
 - *ChainFuzzer.* [arXiv:2603.12614](https://arxiv.org/abs/2603.12614)
 - *CIA.* [ACL 2026](https://aclanthology.org/2026.acl-long.815.pdf)
 
+## Running the testbed
+
+```bash
+git submodule update --init      # τ-bench (tau2-bench v1.0.1) in third_party/
+uv sync
+cp .env.example .env             # API key + AGENT_LLM (any LiteLLM model name)
+
+uv run python -m stand configs           # list agent configurations
+uv run python -m stand declared retail   # declared set -> data/ground_truth/retail.json
+uv run python -m stand chat retail       # talk to the agent as the user (/trace shows hidden tool calls)
+uv run pytest                            # checks that need no LLM
+```
+
 ## Repository structure
 
 ```
 ├── README.md
-├── docs/          # literature survey, presentations
-├── stand/         # agent configurations and ground-truth labels
-├── probing/       # baselines and our method
-├── service/       # FastAPI service
-└── experiments/   # notebooks and results
+├── docs/                # literature survey, presentations
+├── src/
+│   └── stand/           # testbed: τ-bench agent as a black box, configurations, declared set
+├── data/ground_truth/   # exported declared sets
+├── third_party/         # tau2-bench (git submodule)
+├── tests/
+└── experiments/         # notebooks and results
 ```

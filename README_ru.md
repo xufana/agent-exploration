@@ -74,13 +74,28 @@
 - *ChainFuzzer.* [arXiv:2603.12614](https://arxiv.org/abs/2603.12614)
 - *CIA.* [ACL 2026](https://aclanthology.org/2026.acl-long.815.pdf)
 
+## Запуск стенда
+
+```bash
+git submodule update --init      # τ-bench (tau2-bench v1.0.1) в third_party/
+uv sync
+cp .env.example .env             # ключ API + AGENT_LLM (любое имя модели LiteLLM)
+
+uv run python -m stand configs           # список конфигураций агентов
+uv run python -m stand declared retail   # заявленное множество -> data/ground_truth/retail.json
+uv run python -m stand chat retail       # говорить с агентом от лица пользователя (/trace показывает скрытые вызовы)
+uv run pytest                            # проверки без LLM
+```
+
 ## Структура репозитория
 
 ```
 ├── README.md
-├── docs/          # обзор литературы, презентации
-├── stand/         # конфигурации агентов и разметка истины
-├── probing/       # бейзлайны и собственный метод
-├── service/       # FastAPI-сервис
-└── experiments/   # ноутбуки и результаты
+├── docs/                # обзор литературы, презентации
+├── src/
+│   └── stand/           # стенд: агент τ-bench как чёрный ящик, конфигурации, заявленное множество
+├── data/ground_truth/   # выгруженные заявленные множества
+├── third_party/         # tau2-bench (git submodule)
+├── tests/
+└── experiments/         # ноутбуки и результаты
 ```

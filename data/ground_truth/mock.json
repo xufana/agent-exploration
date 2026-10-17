@@ -1,0 +1,111 @@
+{
+  "config": "mock",
+  "domain": "mock",
+  "system_prompt": "<instructions>\nYou are a customer service agent that helps the user according to the <policy> provided below.\nIn each turn you can either:\n- Send a message to the user.\n- Make a tool call.\nYou cannot do both at the same time.\n\nTry to be helpful and always follow the policy. Always make sure you generate valid JSON only.\n</instructions>\n<policy>\n# Mock Domain Policy\n\n1. Each task must have a title\n2. Task status can only be \"pending\" or \"completed\"\n3. Only existing users can create tasks \n4. You are not allowed to delete tasks. You should transfer the a human agent.\n5. If the user asks for a compliment, compliment them\n</policy>",
+  "tools": [
+    {
+      "name": "create_task",
+      "description": "Create a new task for a user.",
+      "parameters": {
+        "properties": {
+          "user_id": {
+            "description": "The ID of the user creating the task",
+            "title": "User Id",
+            "type": "string"
+          },
+          "title": {
+            "description": "The title of the task",
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "default": null,
+            "description": "Optional description of the task",
+            "title": "Description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "title"
+        ],
+        "title": "parameters",
+        "type": "object"
+      },
+      "mutates_state": true
+    },
+    {
+      "name": "get_users",
+      "description": "Get all users in the database.",
+      "parameters": {
+        "properties": {},
+        "title": "parameters",
+        "type": "object"
+      },
+      "mutates_state": false
+    },
+    {
+      "name": "update_task_status",
+      "description": "Update the status of a task.",
+      "parameters": {
+        "properties": {
+          "task_id": {
+            "description": "The ID of the task to update",
+            "title": "Task Id",
+            "type": "string"
+          },
+          "status": {
+            "description": "The new status of the task",
+            "enum": [
+              "pending",
+              "completed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "status"
+        ],
+        "title": "parameters",
+        "type": "object"
+      },
+      "mutates_state": true
+    },
+    {
+      "name": "transfer_to_human_agents",
+      "description": "Transfer the user to a human agent, with a summary of the user's issue.\n\nOnly transfer if\n -  the user explicitly asks for a human agent\n -  given the policy and the available tools, you cannot solve the user's issue.",
+      "parameters": {
+        "properties": {
+          "summary": {
+            "description": "A summary of the user's issue.",
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary"
+        ],
+        "title": "parameters",
+        "type": "object"
+      },
+      "mutates_state": false
+    }
+  ],
+  "discoverable_tools": [],
+  "resources": {
+    "tasks": {
+      "count": 1,
+      "ids": [
+        "task_1"
+      ]
+    },
+    "users": {
+      "count": 1,
+      "ids": [
+        "user_1"
+      ]
+    }
+  }
+}
