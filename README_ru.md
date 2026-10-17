@@ -77,7 +77,7 @@
 ## Запуск стенда
 
 ```bash
-git submodule update --init      # τ-bench (tau2-bench v1.0.1) в third_party/
+git submodule update --init      # данные доменов τ-bench; код uv ставит из того же коммита
 uv sync
 cp .env.example .env             # ключ API + AGENT_LLM (любое имя модели LiteLLM)
 
@@ -95,7 +95,7 @@ uv run pytest                            # проверки без LLM
 ├── src/
 │   └── stand/           # стенд: агент τ-bench как чёрный ящик, конфигурации, заявленное множество
 ├── data/ground_truth/   # выгруженные заявленные множества
-├── third_party/         # tau2-bench (git submodule)
+├── third_party/         # tau2-bench v1.0.1 (git submodule, источник данных доменов)
 ├── tests/
 └── experiments/         # ноутбуки и результаты
 ```

@@ -5,7 +5,7 @@ inside and are recorded in `trace`, which is ground truth for scoring, never
 input for the prober.
 """
 
-from typing import Optional, Protocol
+from typing import Protocol
 
 from tau2.data_model.message import (
     AssistantMessage,
@@ -54,7 +54,8 @@ class BlackBoxAgent:
         greeting = DEFAULT_FIRST_AGENT_MESSAGE.model_copy(deep=True)
         self._state = self.agent.get_init_state(message_history=[greeting])
         self.trace: list[Message] = [greeting]
-        return greeting.content
+        content: str = greeting.content
+        return content
 
     def send(self, text: str) -> str:
         """One user turn: the agent may call tools any number of times, then replies."""
@@ -97,7 +98,7 @@ class BlackBoxAgent:
             for tc in m.tool_calls
         ]
 
-    def transcript(self) -> list[dict]:
+    def transcript(self) -> list[dict[str, str | None]]:
         """The dialogue exactly as the prober saw it."""
         return [
             {"role": m.role, "content": m.content}
@@ -105,6 +106,6 @@ class BlackBoxAgent:
             if isinstance(m, (UserMessage, AssistantMessage)) and not m.is_tool_call()
         ]
 
-    def cost(self) -> Optional[float]:
+    def cost(self) -> float | None:
         costs = [m.cost for m in self.trace if isinstance(m, AssistantMessage) and m.cost]
         return sum(costs) if costs else None

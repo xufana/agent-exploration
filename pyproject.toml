@@ -1,0 +1,65 @@
+[project]
+name = "agent-exploration"
+version = "0.1.0"
+description = "Black-box recovery of an LLM agent's tools and reachable resources"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "tau2",
+    "litellm",
+    "loguru>=0.7.3",
+    "pydantic>=2",
+    "python-dotenv>=1.0.0",
+    "typer>=0.12.5",
+]
+
+[project.optional-dependencies]
+ml = [
+    "scikit-learn>=1.5",
+    "torch>=2.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.14",
+    "mypy>=1.15",
+    "pre-commit>=4.0.0",
+]
+
+[tool.uv.sources]
+# Code: τ-bench v1.0.1 by commit, so a clone without submodules still installs.
+# Data (domain DBs, policies, tasks) is not in the package; it comes from the
+# third_party/tau2-bench submodule, pinned to the same commit (see tests/test_package.py).
+tau2 = { git = "https://github.com/sierra-research/tau2-bench", rev = "fc0055dc4e0a316c3f83133267fbd6faaa770992" }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stand"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["third_party"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["src", "tests"]
+mypy_path = "src"
+exclude = ["third_party/"]
+
+# tau2 and litellm ship without type information.
+[[tool.mypy.overrides]]
+module = ["tau2.*", "litellm.*"]
+ignore_missing_imports = true
+follow_untyped_imports = false
